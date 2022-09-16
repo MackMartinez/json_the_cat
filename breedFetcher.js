@@ -7,8 +7,20 @@ const userInput = process.argv;
 const userInputQuery = `https://api.thecatapi.com/v1/breeds/search?q=${userInput[2]}`;
 
 //request description of queried breed
-request(`${userInputQuery}`, (error, response, body) => {
-  const data = JSON.parse(body);
-  console.log(data[0].description);
-});
+const breedCatcher = function() {
+  request(`${userInputQuery}`, (error, response, body) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    const data = JSON.parse(body);
+    if (data.length === 0) {
+      return console.log("Breed not found, please try another!");
+    } else {
+      console.log(data[0].description);
+    }
+  });
+};
+
+breedCatcher();
 
