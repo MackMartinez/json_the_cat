@@ -1,26 +1,21 @@
 const request = require("request");
 
-//capture user input in node
-const userInput = process.argv;
-
-//use template literals to capture user breed request and create url
-const userInputQuery = `https://api.thecatapi.com/v1/breeds/search?q=${userInput[2]}`;
-
-//request description of queried breed
-const breedCatcher = function() {
-  request(`${userInputQuery}`, (error, response, body) => {
+const fetchBreedDescription = (breedName, callback) => {
+  let description;
+  request(`https://api.thecatapi.com/v1/breeds/search?q=${breedName}`, (error, response, body) => {
     if (error) {
-      console.log(error);
+      callback(error, description);
       return;
     }
     const data = JSON.parse(body);
     if (data.length === 0) {
-      return console.log("Breed not found, please try another!");
+      console.log("Breed not found, please try another!");
+      callback(error, description);
     } else {
       console.log(data[0].description);
     }
   });
 };
 
-breedCatcher();
 
+module.exports = { fetchBreedDescription };
